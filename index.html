@@ -56,55 +56,32 @@ console.log(imageSwapper);
 </script>
 
 
-<!-- <script type="text/javascript">
-var people = (function(){
-  var people = ['Will', 'Steve'];
-
-  //cache DOM
-  var $el = $('#peopleModule');
-  var $button = $el.find('button');
-  var $input = $el.find('input');
-  var $ul = $el.find('ul');
-  var template = $el.find('#people-template').html();
-
-  //bind events
-  $button.on('click', addPerson);
-  $ul.delegate('i.del', 'click', deletePerson);
-
-  _render();
-
-  function _render() {
-     $ul.html(Mustache.render(template, {people: people}));
-  }
-
-  function addPerson(value) {
-      var name = (typeof value === "string") ? value : $input.val();
-      people.push(name);
-      _render();
-      $input.val('');
-  }
-
-  function deletePerson(event) {
-      var i;
-      if (typeof event === "number") {
-          i = event;
-      } else {
-          var $remove = $(event.target).closest('li');
-          i = $ul.find('li').index($remove);
-      }
-      people.splice(i, 1);
-      _render();
-  }
-
-  return {
-      addPerson: addPerson,
-      deletePerson: deletePerson
-  };
-
-})();
-
-//people.addPerson("Jake");
-//people.deletePerson(0);
-</script> -->
+	var imageSwap = (function () {
+		var url = document.querySelector('.swap-image').baseURI + "assets/images/";
+		function swap(name) {
+			var newimage = url + name;
+				document.querySelector('.swap-image').src = newimage
+		}
+		function imagesToSwap() {
+			if (mq >= 992) {
+				imageSwap.swap("cloud.png");
+			} else {
+				imageSwap.swap("mobile-clouds.png")
+			}
+		}	
+		function checkResolution() {
+			$(window).resize(function () {
+				mq = window.innerWidth;
+				imagesToSwap();
+			});
+ 				imagesToSwap();
+		}
+		return {
+			swap: swap,
+			onLoad: checkResolution
+		}
+	})();
+	
+imageSwap.onLoad();
   </body>
 </html>
