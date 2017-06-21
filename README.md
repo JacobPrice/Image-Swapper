@@ -51,5 +51,5 @@ Then the code would look like this
 ```javascript
 
 
-$('icon').hoverImageSwap('img', '-h')
+$('.icon').hoverImageSwap('img', '-h')
 ```
