@@ -1,27 +1,36 @@
-$(document).ready(function() {
-		var mq = window.innerWidth;
-		///As the name describes this is an image swapping api
-		var imageSwap = (function () {
-			var url = "";///Put the path to the images here: example.com/assets/images/
-			function swap(name) {
-				var newimage = url + name;
-				document.querySelector('.swap-image').src = newimage
-			}
-			function imagesToSwap() {
-				if (mq <= 992) {
-					imageSwap.swap("mobile-home-image.jpg");///Images that you want swapped---Mobile
-				} else {
-					imageSwap.swap("home-image.jpg")///Images that you want swapped---Desktop
-				}
-			}
-			function checkResolution() {
-				$(window).resize(function () {
-					mq = window.innerWidth;
-					imagesToSwap();
-				});
-				imagesToSwap();
-			}
-			return {swap: swap, onLoad: checkResolution}
-		})();
-		imageSwap.onLoad();	///Call this to ensure that on load of the dom, the proper image is placed based off client width.  
-	});
+ jQuery.fn.extend({
+     hoverImageSwap: function(child, hoverModifier) {
+       function getImageSrc(el) {
+         return $(el).attr('src')
+       }
+       function createHoverSrc(src, hoverModifier) {
+          return src.split('/').slice(0,-1).join('/') + '/' + src.split('/').pop().split('.')[0] + hoverModifier + '.' + src.split('/').pop().split('.')[1]
+       }
+       function setImage(el) {
+         var currentState = getImageSrc(el)
+         var originalState = $(el).data('originalSrc')
+         var hoverState =  $(el).data('hoverSrc')
+         if (hoverState != currentState) {
+           $(el).attr('src', hoverState)
+         } else {
+           $(el).attr('src', originalState)
+         } 
+       }
+    ///Hover modifier would be like foo.png foo-h.png 'h' being the modifier to pass
+       function setHover(parent, child, hoverModifier) {
+         $(parent).each(function(i,item) {
+           var $child = $(this).find(child);
+        // create data of original and hover to be have for swapping//
+          $child.data({
+            originalSrc: getImageSrc($child),
+            hoverSrc: createHoverSrc($child.attr('src'), hoverModifier)
+          })
+          // bind hover to each child//
+          $($child).hover(function() { 
+            setImage($child) 
+          })
+         })
+       }
+       return setHover(this, child, hoverModifier)
+     }
+   })
